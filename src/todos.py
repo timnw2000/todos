@@ -4,129 +4,137 @@ import os
 import sqlite3
 import sys
 
-from datetime import datetime
+import datetime
 
 class ToDos:
     def __init__(self):
-        database_connection = sqlite3.connect("database/data.db")
-        self.connection = True if os.path.exists("data.db") else False
+        self.database_connection = sqlite3.connect("data.db") if os.path.exists("data.db") else sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
+        self.cursor = self.database_connection.cursor()
+        self.initialized = True if os.path.exists("data.db") else False
         self.weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+
+
+
+
+    def add(self, todo):
+        if not self.initialized:
+            sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
+        if len(sys.argv) != 3:
+            sys.exit("Wrong amount of command line arguments")
+        data = (todo.todo, todo.weekday, todo.importance, todo.description)
+        self.cursor.execute(
+            "INSERT INTO todos (todo, weekday, importance, description) VALUES (?, ?, ?, ?)", data
+        )
+        self.database_connection.commit()
+        
         
 
-    def __repr__(self):
-        ...
-    
-    def __str__(self):
-        ...
 
-    def add(self, weekday, todo):
-        cursor = self.database_connection.cursor()
-        if not self.connection:
-            sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
-        fieldnames = ["id", "time", "category", "description", "importance"]
-        match weekday.lower().strip():
-            case "monday":
-                self.monday.append(todo)
-            case "tuesday":
-                self.tuesday.append(todo)
-            case "wednesday":
-                self.wednesday.append(todo)
-            case "thursday":
-                self.thursday.append(todo)
-            case "friday":
-                self.friday.append(todo)
-            case "saturday":
-                self.saturday.append(todo)
-            case "sunday":
-                self.sunday.append(todo)
-            case _:
-                sys.exit("There is no such day in the week")
 
-    def show(self, weekday=None):
-        if not self.connection:
+    def show(self):
+        if not self.initialized:
             sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
-        if weekday is None:
-            ...#print everyToDo of every day
-        elif weekday not in self.weekdays:
-            sys.exit("")
+        try:
+            requested_weekday = sys.argv[1].lower().strip()
+        except IndexError:
+            todos_for_the_day = self.cursor.execute("SELECT * FROM todos")
+            for todo in todos_for_the_day:
+                print(todo)
+        else:
+            if requested_weekday in self.weekdays:
+                todos_for_the_day = self.cursor.execute("SELECT * FROM todos WHERE weekday = ?", (requested_weekday,))
+                for todo in todos_for_the_day:
+                    print(todo)
+
         
 
-    def create_database(self):
+
+
+        
+    @classmethod
+    def create_database(cls):
         if not os.path.exists("data.db"):
-            ...
-            #some sql lite code to create the wanted database with the needed tables
-            # Connect to the database
-            #return connection object
-        
-        #connect to the database
-        #return connection object
+            try:
+                conn = sqlite3.connect("data.db")
+                cur = conn.cursor()
+                cur.execute("""
+                    CREATE TABLE todos (
+                        id INTEGER NOT NULL,
+                        todo TEXT NOT NULL,
+                        weekday TEXT NOT NULL,
+                        time TEXT,
+                        importance TEXT,
+                        description TEXT,
+                        PRIMARY KEY (id)
+                        UNIQUE (todo)
+                    )
+                """)
+                cur.execute("""
+                    CREATE TABLE history (
+                        id INTEGER NOT NULL,
+                        todo TEXT NOT NULL,
+                        scheduled TEXT NOT NULL,
+                        finished_weekday TEXT NOT NULL,
+                        finished_time TEXT,
+                        description TEXT,
+                        state TEXT NOT NULL
+                    )
+                """)
+                conn.commit()
+            except:
+                sys.exit("Something went wrong")
+            else:
+                sys.exit("Successfully initialized")
+       
 
-    
 
 
-    def remove(self, weekday, id):
-        if not self.connection:
+
+    def remove(self):
+        if not self.initialized:
             sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
-        match weekday.lower().strip():
-            case "monday":
-                for idx, todo in enumerate(self.monday):
-                    if todo.id == id:
-                        self.monday.pop(idx)
-            case "tuesday":
-                for idx, todo in enumerate(self.tuesday):
-                    if todo.id == id:
-                        self.tuesday.pop(idx)
-            case "wednesday":
-                for idx, todo in enumerate(self.wednesday):
-                    if todo.id == id:
-                        self.wednesday.pop(idx)
-            case "thursday":
-                for idx, todo in enumerate(self.thursday):
-                    if todo.id == id:
-                        self.thursday.pop(idx)
-            case "friday":
-                for idx, todo in enumerate(self.friday):
-                    if todo.id == id:
-                        self.friday.pop(idx)
-            case "saturday":
-                for idx, todo in enumerate(self.saturday):
-                    if todo.id == id:
-                        self.saturday.pop(idx)
-            case "sunday":
-                for idx, todo in enumerate(self.sunday):
-                    if todo.id == id:
-                        self.sunday.pop(idx)
+    
+        if len(sys.argv) == 2 and isinstance(int(sys.argv[1]), int):
+            todos_for_history = self.cursor.execute("SELECT * FROM todos WHERE id = ?", (sys.argv[1],)).fetchone()
+            id, todo, weekday,importance, description = todos_for_history
+            finished = datetime.datetime.now().strftime("%B")
+            data = (id, todo, weekday, finished, importance, description)
+            self.cursor.execute(
+                "INSERT INTO history (id, todo, scheduled, finished_weekday, importance, description) VALUES (?, ?, ?, ?, ?, ?)", data
+            )
+            
+            
+            self.cursor.execute(
+                "DELETE FROM todos WHERE id = ?", sys.argv[1]
+            )
+            self.database_connection.commit()
+
+
 
     
 
 @dataclass
 class ToDo:
-    time: str
-    category: str
+    todo: str
+    weekday: str
     description: str
     importance: str
 
 
 
 if __name__ == "__main__":
-#    todos = ToDos()
+    ToDos.create_database()
+    todos = ToDos()
 
-#    todo1 = ToDo("11:30", "test", "some description", "high")
-#    todo2 = ToDo("12:30", "someother test", "someother description", "high")
+    #if not len(sys.argv) == 4:
+        #sys.exit("Invalid Usage: todo add <todo_name> <weekday>")
+    #if sys.argv[3] not in todos.weekdays:
+        #sys.exit("Invalid weekday")
+    #todo = ToDo(sys.argv[1], sys.argv[2].lower(), input("Description: ").strip(), input("Importance: ").strip())
+    #todos.add(todo)
+    todos.remove()
+    
 
-#    todos.add("sunday", todo1)
-#    todos.add("wednesday", todo2)
-
-    database_connection = sqlite3.connect("data.db")
-    cursor = database_connection.cursor()
-
-    #cursor.execute(
-    #    "INSERT INTO todos (todo, content, weekday, time) VALUES ('testing script', 'test1', 'monday', '14:00')"
-    #)
-    res = cursor.execute(
-        "SELECT * FROM todos"
-    )
-    print(res.fetchall())
-
-    database_connection.commit()
+    
 
