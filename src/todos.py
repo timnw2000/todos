@@ -1,16 +1,17 @@
-from dataclasses import dataclass
-import sys
 import csv
+from dataclasses import dataclass
+import os
+import sqlite3
+import sys
+
+from datetime import datetime
 
 class ToDos:
     def __init__(self):
-        self.monday = []
-        self.tuesday = []
-        self.wednesday = []
-        self.thursday = []
-        self.friday = []
-        self.saturday = []
-        self.sunday = []
+        database_connection = sqlite3.connect("database/data.db")
+        self.connection = True if os.path.exists("data.db") else False
+        self.weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        
 
     def __repr__(self):
         ...
@@ -19,39 +20,54 @@ class ToDos:
         ...
 
     def add(self, weekday, todo):
-        
+        cursor = self.database_connection.cursor()
+        if not self.connection:
+            sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
+        fieldnames = ["id", "time", "category", "description", "importance"]
         match weekday.lower().strip():
             case "monday":
                 self.monday.append(todo)
-                with open("monday.csv") as monday:
-                    writer = csv.DictWriter()
-                    
-
             case "tuesday":
                 self.tuesday.append(todo)
-
             case "wednesday":
                 self.wednesday.append(todo)
-
             case "thursday":
                 self.thursday.append(todo)
-
             case "friday":
                 self.friday.append(todo)
-
             case "saturday":
                 self.saturday.append(todo)
-
             case "sunday":
                 self.sunday.append(todo)
             case _:
                 sys.exit("There is no such day in the week")
 
-    def show(self):
-        ...
+    def show(self, weekday=None):
+        if not self.connection:
+            sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
+        if weekday is None:
+            ...#print everyToDo of every day
+        elif weekday not in self.weekdays:
+            sys.exit("")
+        
+
+    def create_database(self):
+        if not os.path.exists("data.db"):
+            ...
+            #some sql lite code to create the wanted database with the needed tables
+            # Connect to the database
+            #return connection object
+        
+        #connect to the database
+        #return connection object
+
+    
+
 
     def remove(self, weekday, id):
-         match weekday.lower().strip():
+        if not self.connection:
+            sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
+        match weekday.lower().strip():
             case "monday":
                 for idx, todo in enumerate(self.monday):
                     if todo.id == id:
@@ -81,15 +97,22 @@ class ToDos:
                     if todo.id == id:
                         self.sunday.pop(idx)
 
-
-        
-
-
-
+    
 
 @dataclass
 class ToDo:
-    id: int
+    time: str
     category: str
     description: str
     importance: str
+
+
+
+if __name__ == "__main__":
+    todos = ToDos()
+
+    todo1 = ToDo("11:30", "test", "some description", "high")
+    todo2 = ToDo("12:30", "someother test", "someother description", "high")
+
+    todos.add("sunday", todo1)
+    todos.add("wednesday", todo2)
