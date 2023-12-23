@@ -109,10 +109,24 @@ class ToDo:
 
 
 if __name__ == "__main__":
-    todos = ToDos()
+#    todos = ToDos()
 
-    todo1 = ToDo("11:30", "test", "some description", "high")
-    todo2 = ToDo("12:30", "someother test", "someother description", "high")
+#    todo1 = ToDo("11:30", "test", "some description", "high")
+#    todo2 = ToDo("12:30", "someother test", "someother description", "high")
 
-    todos.add("sunday", todo1)
-    todos.add("wednesday", todo2)
+#    todos.add("sunday", todo1)
+#    todos.add("wednesday", todo2)
+
+    database_connection = sqlite3.connect("data.db")
+    cursor = database_connection.cursor()
+
+    #cursor.execute(
+    #    "INSERT INTO todos (todo, content, weekday, time) VALUES ('testing script', 'test1', 'monday', '14:00')"
+    #)
+    res = cursor.execute(
+        "SELECT * FROM todos"
+    )
+    print(res.fetchall())
+
+    database_connection.commit()
+
