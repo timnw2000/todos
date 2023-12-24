@@ -14,8 +14,8 @@ CREATE TABLE todos (
 CREATE TABLE history (
     id INTEGER NOT NULL,
     todo TEXT NOT NULL,
-    scheduled TEXT NOT NULL,
-    finished_weekday TEXT NOT NULL,
+    finished_time TEXT NOT NULL,
     importance TEXT,
-    description TEXT
+    description TEXT,
+    comment TEXT
 );

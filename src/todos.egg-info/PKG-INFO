@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: todos
+Version: 0.1.0
+Summary: A simple command line utility that manages your ToDos
+Home-page: https://github.com/timnw2000/todos
+Author: Tim Nwungang
+Author-email: timnw.dev@gmail.com
+Maintainer-email: timnw.dev@gmail.com
+License: MIT
+Project-URL: Documentation, https://github.com/timnw2000/File-Manager/blob/creating_gui/README.md
+Requires: setuptools
+Description-Content-Type: text/markdown
+Requires-Dist: prettytable==3.9.0
+Requires-Dist: tabulate==0.9.0
+Requires-Dist: wcwidth==0.2.12
