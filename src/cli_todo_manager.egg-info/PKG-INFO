@@ -1,5 +1,5 @@
 Metadata-Version: 2.1
-Name: todos
+Name: cli-todo-manager
 Version: 0.1.0
 Summary: A simple command line utility that manages your ToDos
 Home-page: https://github.com/timnw2000/todos
