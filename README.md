@@ -46,13 +46,13 @@ A data class for representing a ToDo item.
 
 The next prompts give you the opportunity to further describe your todo
 
-    ```
-    Description: some description
-    ```
-    
-    ```
-    Importance: high
-    ```
+```
+Description: some description
+```
+
+```
+Importance: high
+```
 
 
 3. **Show ToDo items**: Use `todo show` to display all items or `todo show [criteria]` for specific items. You can search for the `id`, `name`, `day` and `importance`.
