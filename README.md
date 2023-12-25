@@ -49,6 +49,7 @@ The next prompts give you the opportunity to further describe your todo
     ```
     Description: some description
     ```
+    
     ```
     Importance: high
     ```
