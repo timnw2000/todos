@@ -31,25 +31,85 @@ A data class for representing a ToDo item.
 
 ## Usage
 
-1. **Initialize the database**: Run the script with `todo init` to create the database.
+1. **Initialize the database**: Run the script with `todo init` to a create the database for the current Directory. Therefore each Directory can have their own ToDo-Manager.
 
     ```
     todo init
     ```
     
 
-2. **Add a ToDo item**: Use `todo add <name> <weekday> <description> <importance>` to add a new item.
-3. **Show ToDo items**: Use `todo show` to display all items or `todo show <criteria>` for specific items.
+2. **Add a ToDo item**: Use `todo add <todo-name> <weekday>` to add a new item.
+
+    ```
+    todo add some_todo sunday
+    ```
+
+The next prompts give you the opportunity to further describe your todo
+
+    ```
+    Description: some description
+    ```
+    ```
+    Importance: high
+    ```
+
+
+3. **Show ToDo items**: Use `todo show` to display all items or `todo show [criteria]` for specific items. You can search for the `id`, `name`, `day` and `importance`.
+
+    ```
+    todo show 
+    ```
+    or
+    ```
+    todo show some_todo
+    ```
+    or 
+    ```
+    todo show 1
+    ```
+    or
+    ```
+    todo show sunday
+    ```
+    or 
+    ```
+    todo show high
+    ```
+
+
+
+
 4. **Remove a ToDo item**: Use `todo remove <id_or_name>` to remove an item and add it to the history.
 
-## Dependencies
+     ```
+    todo remove 1 
+    ```
+    or
+    ```
+    todo remove some_todo
+    ```
 
-- `dataclasses`: For the ToDo data class.
-- `datetime`: To handle date and time operations.
-- `os`: To interact with the operating system.
-- `sqlite3`: For SQLite database operations.
-- `sys`: To handle command-line arguments.
-- `tabulate`: To display tables in the command line.
+5. **Show History of completed ToDos**: Use `todo history` to display all items or `todo history [criteria]` for specific items. You can search for the `id`, `name`, `finished_time` and `importance`.
+
+    ```
+    todo history 
+    ```
+    or
+    ```
+    todo history some_todo
+    ```
+    or 
+    ```
+    todo show 1
+    ```
+    or
+    ```
+    todo show 24 December 2023
+    ```
+    or 
+    ```
+    todo show high
+    ```
 
 ## Limitations
 
