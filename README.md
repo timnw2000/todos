@@ -33,8 +33,11 @@ A data class for representing a ToDo item.
 
 1. **Initialize the database**: Run the script with `todo init` to create the database.
 
+    ```
     todo init
+    ```
     
+
 2. **Add a ToDo item**: Use `todo add <name> <weekday> <description> <importance>` to add a new item.
 3. **Show ToDo items**: Use `todo show` to display all items or `todo show <criteria>` for specific items.
 4. **Remove a ToDo item**: Use `todo remove <id_or_name>` to remove an item and add it to the history.
