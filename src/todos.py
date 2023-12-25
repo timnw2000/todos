@@ -22,7 +22,7 @@ class ToDos:
             sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
         if len(sys.argv) != 4:
             sys.exit("Wrong amount of command line arguments")
-        data = (todo.todo, todo.weekday if todo.weekday.lower() in self.weekdays else sys.exit("Not a valid day"), todo.importance, todo.description)
+        data = (todo.todo, todo.weekday.lower(), todo.importance, todo.description)
         try:
             self.cursor.execute(
                 "INSERT INTO todos (todo, weekday, importance, description) VALUES (?, ?, ?, ?)", data

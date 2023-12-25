@@ -7,8 +7,14 @@ from todos import ToDos, ToDo
 
 def add_todo():
     todos = ToDos()
-    todo = ToDo(sys.argv[2], sys.argv[3], input("Description: ").strip(), input("Importance: ").strip())
-    todos.add(todo)
+    if sys.argv[3] not in todos.weekdays:
+        sys.exit("Not a valid day")
+    try:
+        todo = ToDo(sys.argv[2], sys.argv[3], input("Description: ").strip(), input("Importance: ").strip())
+    except IndexError:
+        sys.exit("Missing commeand line arguments => todo add <todo-name> <weekday>")
+    else:
+        todos.add(todo)
 
 def init():
     ToDos.create_database()
