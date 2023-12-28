@@ -12,6 +12,24 @@ class ToDos:
         self.cursor = self.database_connection.cursor()
         self.initialized = True if os.path.exists(".todos.db") else False
         self.weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        self.status_pending = "\033[93mPending ...\033[0m"
+        self.status_in_progress = "\033[92mIn Progress\033[0m"
+        self.status_finsished = "\033[96mFinished\033[0m"
+
+
+    def update(self):
+        if not self.initialized:
+            sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
+        if len(sys.argv) != 3:
+            sys.exit("Wrong amount of command line arguments")
+        try:
+            self.cursor.execute(
+                "UPDATE todos set status = ? WHERE id = ? or todo = ?", (self.status_in_progress, sys.argv[2], sys.argv[2])
+            )
+        except sqlite3.IntegrityError:
+            sys.exit("Something went wrong")
+        else:
+            self.database_connection.commit()
 
 
 
@@ -22,10 +40,10 @@ class ToDos:
             sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
         if len(sys.argv) != 4:
             sys.exit("Wrong amount of command line arguments")
-        data = (todo.todo, todo.weekday.lower(), todo.importance, todo.description)
+        data = (todo.todo, todo.weekday.lower(), todo.importance, self.status_pending, todo.description)
         try:
             self.cursor.execute(
-                "INSERT INTO todos (todo, weekday, importance, description) VALUES (?, ?, ?, ?)", data
+                "INSERT INTO todos (todo, weekday, importance, status, description) VALUES (?, ?, ?, ?, ?)", data
             )
         except sqlite3.IntegrityError:
             sys.exit(f"Todo with the name {sys.argv[2]} already exists. Choose a different name")
@@ -50,13 +68,14 @@ class ToDos:
             for todo in check_list:
                 table.append(list(todo))
         else:
-            todos_ = self.cursor.execute("SELECT * FROM todos WHERE weekday = ? or id = ? or todo = ? or importance = ?", (requested, requested, requested, requested))
+            data = (requested, requested, requested, requested, requested)
+            todos_ = self.cursor.execute("SELECT * FROM todos WHERE weekday = ? or id = ? or todo = ? or importance = ? or status = ?", data)
             check_list = todos_.fetchall()
             if not check_list:
                 sys.exit("No results found")
             for todo in check_list:
                 table.append(list(todo))
-        print(tabulate(table, headers=["ID", "ToDo", "Weekday", "Importance", "Description"], tablefmt="grid"))
+        print(tabulate(table, headers=["ID", "ToDo", "Weekday", "Importance", "Description", "Status"], tablefmt="grid"))
             
         
 
@@ -82,7 +101,7 @@ class ToDos:
                 sys.exit("No results found")
             for todo in check_list:
                 table.append(list(todo))
-        print(tabulate(table, headers=["ID", "ToDo", "Finished", "Importance", "Description", "Comment"], tablefmt="grid"))
+        print(tabulate(table, headers=["ID", "ToDo", "Finished", "Importance", "Description", "Comment", "Status"], tablefmt="grid"))
         
         
 
@@ -102,6 +121,7 @@ class ToDos:
                         weekday TEXT NOT NULL,
                         importance TEXT,
                         description TEXT,
+                        status TEXT,
                         PRIMARY KEY (id)
                         UNIQUE (todo)
                     )
@@ -113,7 +133,19 @@ class ToDos:
                         finished_time TEXT NOT NULL,
                         importance TEXT,
                         description TEXT,
-                        comment TEXT
+                        comment TEXT,
+                        status TEXT,
+                        PRIMARY KEY (id)
+                    )
+                """)
+                cur.execute("""
+                    CREATE TABLE logs (
+                        id INTEGER NOT NULL,
+                        todo TEXT NOT NULL,
+                        time TEXT NOT NULL,
+                        action TEXT,
+                        status TEXT,
+                        PRIMARY KEY (id)
                     )
                 """)
                 conn.commit()
@@ -137,16 +169,16 @@ class ToDos:
         if not todos_for_history:
             sys.exit("No Todo found with such id or name")
         else:
-            id, todo, _, importance, description = todos_for_history
+            id, todo, _, importance, description, __ = todos_for_history
             day = datetime.datetime.now().strftime("%d")
             month = datetime.datetime.now().strftime("%B")
             year = datetime.datetime.now().strftime("%Y")
             time = f"{day} {month} {year}"
             comment = input("Comment: ").strip()
-            data = (id, todo, time, importance, description, comment)
+            data = (todo, time, importance, self.status_finsished, description, comment)
             try:
                 self.cursor.execute(
-                    "INSERT INTO history (id, todo, finished_time, importance, description, comment) VALUES (?, ?, ?, ?, ?, ?)", data
+                    "INSERT INTO history (todo, finished_time, importance, status, description, comment) VALUES (?, ?, ?, ?, ?, ?)", data
                 )
             except:
                 sys.exit("Couldn't remove todo. Try again...")
