@@ -31,6 +31,10 @@ def show_history():
     todos = ToDos()
     todos.show_history()
 
+def update_status():
+    todos = ToDos()
+    todos.update()
+
 def todo():
     if sys.argv[1] == "add":
         add_todo()
@@ -42,5 +46,7 @@ def todo():
         show()
     elif sys.argv[1] == "history":
         show_history()
+    elif  sys.argv[1] == "update":
+        update_status()
     else:
         sys.exit("Invalid command")
