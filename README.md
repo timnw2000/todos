@@ -82,7 +82,7 @@ Importance: high
 
 4. **Remove a ToDo item**: Use `todo remove <id_or_name>` to remove an item and add it to the history.
 
-     ```
+    ```
     todo remove 1 
     ```
     or
@@ -90,7 +90,20 @@ Importance: high
     todo remove some_todo
     ```
 
-5. **Show History of completed ToDos**: Use `todo history` to display all items or `todo history [criteria]` for specific items. You can search for the `id`, `name`, `finished_time` and `importance`.
+5. **Updating Status of ToDo**: Use `todo update <id_or_name>` to update the status of a ToDo from pending to in progress.
+
+    ```
+    todo update 1 
+    ```
+    or
+    ```
+    todo update some_todo
+    ```
+
+
+
+
+5. **Show History of completed ToDos**: Use `todo history` to display all items or `todo history [criteria]` for specific items. You can search for the `id`, `name` and `importance`.
 
     ```
     todo history 
@@ -101,16 +114,22 @@ Importance: high
     ```
     or 
     ```
-    todo show 1
-    ```
-    or
-    ```
-    todo show 24 December 2023
+    todo history 1
     ```
     or 
     ```
     todo show high
     ```
+
+
+
+6. **Show Logs, which includes all actions**: Use `todo logs` to display all actions.
+
+    ```
+    todo logs
+    ```
+
+
 
 ## Limitations
 
