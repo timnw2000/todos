@@ -20,7 +20,7 @@ setup(
     license="MIT",
     maintainer_email="timnw.dev@gmail.com",
     project_urls={
-        "Documentation": "https://github.com/timnw2000/File-Manager/blob/creating_gui/README.md",
+        "Documentation": "https://github.com/timnw2000/todos/blob/main/README.md",
     },
     entry_points={
         "console_scripts": [
