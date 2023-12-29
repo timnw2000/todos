@@ -30,6 +30,8 @@ A data class for representing a ToDo item.
 - `description`: A description of the ToDo item.
 - `importance`: The importance level of the ToDo item.
 - `comments`: A comment left after completing a ToDo.
+- `status`: The state the current ToDo is in. It is either `Pending ...`, `In Progress` or `Finished`.
+- `action`: An action that has been taken.
 
 ## Usage
 
