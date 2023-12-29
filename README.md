@@ -131,8 +131,16 @@ A data class for representing a ToDo item.
     ```
     or 
     ```
-    todo show high
+    todo history high
     ```
+
+    Output looks something like this:
+
+        +------+----------------+------------------+--------------+------------------------------------------+-----------------------------------------------------+----------+
+        |   ID | ToDo           | Finished         | Importance   | Description                              | Comment                                             | Status   |
+        +======+================+==================+==============+==========================================+=====================================================+==========+
+        |    1 | collaborations | 29 December 2023 | high         | Implementing collaboration functionality | I should implement this feature in the next version | Finished |
+        +------+----------------+------------------+--------------+------------------------------------------+-----------------------------------------------------+----------+
 
 
 
@@ -141,6 +149,20 @@ A data class for representing a ToDo item.
     ```
     todo logs
     ```
+
+    Output looks something like this:
+
+        +------+---------------------------------+------------------+-----------------+-------------+
+        |   ID | ToDo                            | Time             | Action          | Status      |
+        +======+=================================+==================+=================+=============+
+        |    1 | collaborations                  | 28 December 2023 | Adding ToDo     | Pending ... |
+        +------+---------------------------------+------------------+-----------------+-------------+
+        |    2 | uploading first version to pypi | 29 December 2023 | Adding ToDo     | Pending ... |
+        +------+---------------------------------+------------------+-----------------+-------------+
+        |    3 | uploading first version to pypi | 29 December 2023 | Updating Status | In Progress |
+        +------+---------------------------------+------------------+-----------------+-------------+
+        |    4 | collaborations                  | 29 December 2023 | Removing ToDo   | Finished    |
+        +------+---------------------------------+------------------+-----------------+-------------+
 
 
 
