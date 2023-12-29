@@ -3,6 +3,8 @@
 
 A simple command-line utility for managing a ToDo list, using SQLite for storage.
 
+This Tool can also be used in an collaborative environment. By adding the created hidden file `todos.db` to the repository, you can share todos with other, who can also manipulate that file using this command-line-tool.
+
 ## Features
 
 - Initialize a new ToDo list database
@@ -44,25 +46,25 @@ A data class for representing a ToDo item.
     todo add some_todo sunday
     ```
 
-The next prompts give you the opportunity to further describe your todo
+    The next prompts give you the opportunity to further describe your todo
 
-```
-Description: some description
-```
+    ```
+    Description: some description
+    ```
 
-```
-Importance: high
-```
+    ```
+    Importance: high
+    ```
 
 
-3. **Show ToDo items**: Use `todo show` to display all items or `todo show [criteria]` for specific items. You can search for the `id`, `name`, `day` and `importance`.
+3. **Show ToDo items**: Use `todo show` to display all items or `todo show [criteria]` for specific items. You can search for the `name`, `id`, `day` and `importance`.
 
     ```
     todo show 
     ```
     or
     ```
-    todo show some_todo
+    todo show some_todo_name
     ```
     or 
     ```
@@ -77,6 +79,17 @@ Importance: high
     todo show high
     ```
 
+    Output looks something like this:
+
+        +------+---------------------------------+-----------+--------------+------------------------------------------+-------------+
+        |   ID | ToDo                            | Weekday   | Importance   | Description                              | Status      |
+        +======+=================================+===========+==============+==========================================+=============+
+        |    1 | collaborations                  | sunday    | high         | Implementing collaboration functionality | Pending ... |
+        +------+---------------------------------+-----------+--------------+------------------------------------------+-------------+
+        |    2 | uploading first version to pypi | friday    | high         | Uploading current version to pypi        | Pending ... |
+        +------+---------------------------------+-----------+--------------+------------------------------------------+-------------+
+
+
 
 
 
@@ -87,10 +100,10 @@ Importance: high
     ```
     or
     ```
-    todo remove some_todo
+    todo remove some_todo_name
     ```
 
-5. **Updating Status of ToDo**: Use `todo update <id_or_name>` to update the status of a ToDo from pending to in progress.
+5. **Updating Status of ToDo**: Use `todo update <id_or_name>` to update the status of a ToDo from `pending` to `in progress`.
 
     ```
     todo update 1 
@@ -123,7 +136,7 @@ Importance: high
 
 
 
-6. **Show Logs, which includes all actions**: Use `todo logs` to display all actions.
+6. **Show Logs, which includes all actions**: Use `todo logs` to display all actions, that has been taken so far.
 
     ```
     todo logs
