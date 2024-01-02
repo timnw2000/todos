@@ -15,6 +15,10 @@ class ToDos:
         self.status_pending = "\033[93mPending ...\033[0m"
         self.status_in_progress = "\033[92mIn Progress\033[0m"
         self.status_finsished = "\033[96mFinished\033[0m"
+        self.day = datetime.datetime.now().strftime('%d')
+        self.month = datetime.datetime.now().strftime('%B')
+        self.year = datetime.datetime.now().strftime('%Y')
+        self.time = f"{self.day} {self.month} {self.year}"
 
 
     def update(self):
@@ -26,10 +30,35 @@ class ToDos:
             self.cursor.execute(
                 "UPDATE todos set status = ? WHERE id = ? or todo = ?", (self.status_in_progress, sys.argv[2], sys.argv[2])
             )
+            self.cursor.execute(
+                "INSERT INTO logs (todo, time, action, status) VALUES ((SELECT todo FROM todos WHERE id = ? or todo = ?), ?, ?, (SELECT status FROM todos WHERE id = ? or todo = ?))", (sys.argv[2], sys.argv[2], self.time, "Updating Status", sys.argv[2], sys.argv[2])
+            )
         except sqlite3.IntegrityError:
             sys.exit("Something went wrong")
         else:
             self.database_connection.commit()
+
+
+
+
+
+
+    def logs(self):
+        table = []
+        if not self.initialized:
+            sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
+        try:
+            todos_ = self.cursor.execute("SELECT * FROM logs")
+            check_list = todos_.fetchall()
+            if not check_list:
+                sys.exit("No results found")
+            for todo in check_list:
+                table.append(list(todo))
+        except IndexError:
+            sys.exit("Something went wrong")
+        else:
+            print(tabulate(table, headers=["ID", "ToDo", "Time", "Action", "Status"], tablefmt="grid"))
+
 
 
 
@@ -45,12 +74,16 @@ class ToDos:
             self.cursor.execute(
                 "INSERT INTO todos (todo, weekday, importance, status, description) VALUES (?, ?, ?, ?, ?)", data
             )
+            self.cursor.execute(
+                "INSERT INTO logs (todo, time, action, status) VALUES ((SELECT todo FROM todos WHERE id = ? or todo = ?), ?, ?, (SELECT status FROM todos WHERE id = ? or todo = ?))", (sys.argv[2], sys.argv[2], self.time, "Adding ToDo", sys.argv[2], sys.argv[2])
+            )
         except sqlite3.IntegrityError:
             sys.exit(f"Todo with the name {sys.argv[2]} already exists. Choose a different name")
         else:
             self.database_connection.commit()
         
         
+
 
 
 
@@ -78,6 +111,7 @@ class ToDos:
         print(tabulate(table, headers=["ID", "ToDo", "Weekday", "Importance", "Description", "Status"], tablefmt="grid"))
             
         
+
 
 
 
@@ -160,6 +194,7 @@ class ToDos:
 
 
 
+
     def remove(self):
         if not self.initialized:
             sys.exit("ToDo-list wasn't initialized use <todo init> to initialize the ToDo-list")
@@ -170,27 +205,27 @@ class ToDos:
             sys.exit("No Todo found with such id or name")
         else:
             id, todo, _, importance, description, __ = todos_for_history
-            day = datetime.datetime.now().strftime("%d")
-            month = datetime.datetime.now().strftime("%B")
-            year = datetime.datetime.now().strftime("%Y")
-            time = f"{day} {month} {year}"
             comment = input("Comment: ").strip()
-            data = (todo, time, importance, self.status_finsished, description, comment)
+            data = (todo, self.time, importance, self.status_finsished, description, comment)
             try:
                 self.cursor.execute(
                     "INSERT INTO history (todo, finished_time, importance, status, description, comment) VALUES (?, ?, ?, ?, ?, ?)", data
                 )
-            except:
-                sys.exit("Couldn't remove todo. Try again...")
-            else:
+                self.cursor.execute(
+                    "INSERT INTO logs (todo, time, action, status) VALUES ((SELECT todo FROM todos WHERE id = ? or todo = ?), ?, ?, (SELECT status FROM history WHERE id = ? or todo = ?))", (sys.argv[2], sys.argv[2], self.time, "Removing ToDo", sys.argv[2], sys.argv[2])
+                )
                 self.cursor.execute(
                     "DELETE FROM todos WHERE id = ? OR todo = ?", (sys.argv[2], sys.argv[2])
                 )
+            except:
+                sys.exit("Couldn't remove todo. Try again...")
+            else:
                 self.database_connection.commit()
 
 
 
     
+
 
 @dataclass
 class ToDo:
