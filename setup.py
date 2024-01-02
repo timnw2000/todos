@@ -8,7 +8,7 @@ with open("README.md", "r") as readme:
 
 setup(
     name="cli_todo_manager",
-    version="0.1.0",
+    version="0.1.1",
     description="A simple command line utility that manages your ToDos",
     long_description=long_description,
     long_description_content_type="text/markdown",
