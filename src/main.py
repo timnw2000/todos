@@ -44,14 +44,14 @@ def todo():
         try:
             add_todo()
         except KeyboardInterrupt:
-            sys.exit("Operation canceled")
+            sys.exit("\nOperation canceled")
     elif sys.argv[1] == "init":
         init()
     elif sys.argv[1] == "remove":
         try:
             remove_todo()
         except KeyboardInterrupt:
-            sys.exit("Operation canceled")
+            sys.exit("\nOperation canceled")
     elif sys.argv[1] == "show":
         show()
     elif sys.argv[1] == "history":
