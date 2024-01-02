@@ -3,25 +3,17 @@
 
 A simple command-line utility for managing a ToDo list, using SQLite for storage.
 
-This Tool can also be used in an collaborative environment. By adding the created hidden file `todos.db` to the repository, you can share todos with other, who can also manipulate that file using this command-line-tool.
+This tool offers a dynamic and collaborative approach to task management. Designed to operate in a team-based environment, it allows for the integration of a hidden file, named todos.db, into a shared repository. This integration is a key feature that enables multiple users to access and update their to-do lists. By adding todos.db to the repository, team members can seamlessly share and synchronize their tasks with each other. This shared access ensures that everyone in the team is on the same page, as they can view, add, modify, and remove tasks using this same command-line tool. This functionality is particularly beneficial in collaborative projects where consistent communication and coordination of tasks are crucial. Furthermore, the use of a command-line interface for this tool makes it versatile and suitable for various environments, including software development, project management, and any other team-oriented workspace where task tracking is essential.
 
 ## Features
 
 - Initialize a new ToDo list database
 - Add ToDo items with details
-- Show all ToDo items
-- Show history of completed ToDo items
+- Show ToDo items
+- Update Status of ToDo Item
 - Remove ToDo items and add them to history
+- Show history of completed ToDo items
 
-## Classes
-
-### ToDos
-
-A class to handle ToDo list operations.
-
-### ToDo
-
-A data class for representing a ToDo item.
 
 #### Fields
 
@@ -42,7 +34,7 @@ A data class for representing a ToDo item.
     ```
     
 
-2. **Add a ToDo item**: Use `todo add <todo-name> <weekday>` to add a new item.
+2. **Add a ToDo item**: Use `todo add <todo_name> <weekday>` to add a new item.
 
     ```
     todo add some_todo sunday
