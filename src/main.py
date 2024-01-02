@@ -41,11 +41,17 @@ def show_logs():
 
 def todo():
     if sys.argv[1] == "add":
-        add_todo()
+        try:
+            add_todo()
+        except KeyboardInterrupt:
+            sys.exit("Operation canceled")
     elif sys.argv[1] == "init":
         init()
     elif sys.argv[1] == "remove":
-        remove_todo()
+        try:
+            remove_todo()
+        except KeyboardInterrupt:
+            sys.exit("Operation canceled")
     elif sys.argv[1] == "show":
         show()
     elif sys.argv[1] == "history":
